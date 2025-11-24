@@ -2,6 +2,7 @@ import vue from 'rollup-plugin-vue'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { babel } from '@rollup/plugin-babel'
+import postcss from 'rollup-plugin-postcss'
 
 export default [
   // UMD build
@@ -19,11 +20,16 @@ export default [
     external: ['vue'],
     plugins: [
       nodeResolve(),
-      commonjs(),
       vue({
         css: false,
         style: false
       }),
+      postcss({
+        extract: false,
+        minimize: true,
+        extensions: ['.less', '.css']
+      }),
+      commonjs(),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**'
@@ -41,11 +47,16 @@ export default [
     external: ['vue'],
     plugins: [
       nodeResolve(),
-      commonjs(),
       vue({
         css: false,
         style: false
       }),
+      postcss({
+        extract: false,
+        minimize: true,
+        extensions: ['.less', '.css']
+      }),
+      commonjs(),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**'
@@ -63,11 +74,16 @@ export default [
     external: ['vue'],
     plugins: [
       nodeResolve(),
-      commonjs(),
       vue({
         css: false,
         style: false
       }),
+      postcss({
+        extract: false,
+        minimize: true,
+        extensions: ['.less', '.css']
+      }),
+      commonjs(),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**'

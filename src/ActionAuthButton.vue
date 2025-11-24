@@ -51,12 +51,24 @@ export default {
         ['view', 'edit', 'add', 'delete', 'custom'].includes(value),
     },
     text: { type: String, default: '' },
-    buttonType: { type: String, default: 'primary' },
-    size: { type: String, default: 'default' },
+    buttonType: {
+      type: String,
+      default: 'primary',
+      validator: (value) => ['primary', 'default', 'dashed', 'danger', 'link'].includes(value)
+    },
+    size: {
+      type: String,
+      default: 'default',
+      validator: (value) => ['small', 'default', 'large'].includes(value)
+    },
     icon: { type: String, default: null },
     loading: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
-    record: { type: Object, default: () => ({}) },
+    record: {
+      type: Object,
+      default: () => ({}),
+      validator: (value) => value !== null && typeof value === 'object'
+    },
     confirmTitle: { type: String, default: '您确认删除这条数据吗？' },
   },
   data() {
