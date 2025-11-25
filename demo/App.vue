@@ -73,6 +73,16 @@
         >
           导出数据
         </ActionAuthButton>
+
+        <!-- 自定义样式按钮 -->
+        <ActionAuthButton
+          type="add"
+          button-type="primary"
+          :button-style="{ padding: '0 40px' }"
+          @add="handleAdd"
+        >
+          自定义样式
+        </ActionAuthButton>
       </div>
     </div>
 
