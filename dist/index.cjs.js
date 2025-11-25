@@ -91,12 +91,25 @@ var script = {
         ['view', 'edit', 'add', 'delete', 'custom'].includes(value),
     },
     text: { type: String, default: '' },
-    buttonType: { type: String, default: 'primary' },
-    size: { type: String, default: 'default' },
+    buttonType: {
+      type: String,
+      default: 'primary',
+      validator: (value) =>
+        ['primary', 'default', 'dashed', 'danger', 'link'].includes(value),
+    },
+    size: {
+      type: String,
+      default: 'default',
+      validator: (value) => ['small', 'default', 'large'].includes(value),
+    },
     icon: { type: String, default: null },
     loading: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
-    record: { type: Object, default: () => ({}) },
+    record: {
+      type: Object,
+      default: () => ({}),
+      validator: (value) => value !== null && typeof value === 'object',
+    },
     confirmTitle: { type: String, default: '您确认删除这条数据吗？' },
   },
   data() {
@@ -201,7 +214,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z = ".action-btn[data-v-02f9db28]{align-items:center;border:1px solid transparent;border-radius:3px;color:#054898!important;cursor:pointer;display:inline-flex;justify-content:center;min-width:auto;transition:all .3s;white-space:nowrap}.action-btn .anticon[data-v-02f9db28]{margin-right:4px}.action-btn.disabled[data-v-02f9db28],.action-btn.no-permission[data-v-02f9db28]{color:#bfbfbf!important;cursor:not-allowed!important;opacity:.6}.action-btn.disabled[data-v-02f9db28]:hover,.action-btn.no-permission[data-v-02f9db28]:hover{background-color:transparent!important;color:#bfbfbf!important}.delete-btn[data-v-02f9db28]{color:#ff4d4f!important}.authority-button.no-permission[data-v-02f9db28]{cursor:not-allowed!important;filter:grayscale(100%);opacity:.6}";
+var css_248z = ".action-btn[data-v-46507212]{align-items:center;border:1px solid transparent;border-radius:3px;color:#054898!important;cursor:pointer;display:inline-flex;justify-content:center;min-width:auto;transition:all .3s;white-space:nowrap}.action-btn .anticon[data-v-46507212]{margin-right:4px}.action-btn.disabled[data-v-46507212],.action-btn.no-permission[data-v-46507212]{color:#bfbfbf!important;cursor:not-allowed!important;opacity:.6}.action-btn.disabled[data-v-46507212]:hover,.action-btn.no-permission[data-v-46507212]:hover{background-color:transparent!important;color:#bfbfbf!important}.delete-btn[data-v-46507212]{color:#ff4d4f!important}.authority-button.no-permission[data-v-46507212]{cursor:not-allowed!important;filter:grayscale(100%);opacity:.6}";
 styleInject(css_248z);
 
 function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
@@ -303,67 +316,179 @@ var __vue_render__ = function () {
                     on: { confirm: _vm.handleClick },
                   },
                   [
+                    !_vm.hasPermission
+                      ? _c(
+                          "a-tooltip",
+                          { attrs: { placement: "top", mouseLeaveDelay: 0 } },
+                          [
+                            _c("template", { slot: "title" }, [
+                              _c("span", [_vm._v("暂无权限，请联系管理员")]),
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "span",
+                              {
+                                staticClass: "action-btn delete-btn",
+                                class: _vm.buttonClass,
+                                on: {
+                                  click: function ($event) {
+                                    $event.stopPropagation();
+                                  },
+                                },
+                              },
+                              [
+                                _vm.icon
+                                  ? _c("a-icon", { attrs: { type: _vm.icon } })
+                                  : _vm._e(),
+                                _vm._v(
+                                  "\n          " +
+                                    _vm._s(_vm.text || _vm.textMap[_vm.type]) +
+                                    "\n        "
+                                ),
+                              ],
+                              1
+                            ),
+                          ],
+                          2
+                        )
+                      : _c(
+                          "span",
+                          {
+                            staticClass: "action-btn delete-btn",
+                            class: _vm.buttonClass,
+                            attrs: { disabled: _vm.disabled },
+                          },
+                          [
+                            _vm.icon
+                              ? _c("a-icon", { attrs: { type: _vm.icon } })
+                              : _vm._e(),
+                            _vm._v(
+                              "\n        " +
+                                _vm._s(_vm.text || _vm.textMap[_vm.type]) +
+                                "\n      "
+                            ),
+                          ],
+                          1
+                        ),
+                  ],
+                  1
+                )
+              : [
+                  !_vm.hasPermission
+                    ? _c(
+                        "a-tooltip",
+                        { attrs: { placement: "top", mouseLeaveDelay: 0 } },
+                        [
+                          _c("template", { slot: "title" }, [
+                            _c("span", [_vm._v("暂无权限，请联系管理员")]),
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "action-btn",
+                              class: _vm.buttonClass,
+                              on: {
+                                click: function ($event) {
+                                  $event.stopPropagation();
+                                },
+                              },
+                            },
+                            [
+                              _vm.icon
+                                ? _c("a-icon", { attrs: { type: _vm.icon } })
+                                : _vm._e(),
+                              _vm._v(
+                                "\n          " +
+                                  _vm._s(_vm.text || _vm.textMap[_vm.type]) +
+                                  "\n        "
+                              ),
+                            ],
+                            1
+                          ),
+                        ],
+                        2
+                      )
+                    : _c(
+                        "span",
+                        {
+                          staticClass: "action-btn",
+                          class: _vm.buttonClass,
+                          attrs: { disabled: _vm.disabled },
+                          on: { click: _vm.handleClick },
+                        },
+                        [
+                          _vm.icon
+                            ? _c("a-icon", { attrs: { type: _vm.icon } })
+                            : _vm._e(),
+                          _vm._v(
+                            "\n        " +
+                              _vm._s(_vm.text || _vm.textMap[_vm.type]) +
+                              "\n      "
+                          ),
+                        ],
+                        1
+                      ),
+                ],
+          ]
+        : [
+            !_vm.hasPermission
+              ? _c(
+                  "a-tooltip",
+                  { attrs: { placement: "top", mouseLeaveDelay: 0 } },
+                  [
+                    _c("template", { slot: "title" }, [
+                      _c("span", [_vm._v("暂无权限，请联系管理员")]),
+                    ]),
+                    _vm._v(" "),
                     _c(
-                      "span",
+                      "a-button",
                       {
-                        staticClass: "action-btn delete-btn",
-                        class: _vm.buttonClass,
-                        attrs: { disabled: !_vm.hasPermission || _vm.disabled },
+                        class: { "no-permission": !_vm.hasPermission },
+                        attrs: {
+                          type: _vm.buttonType,
+                          size: _vm.size,
+                          icon: _vm.icon,
+                          disabled: true,
+                        },
+                        on: {
+                          click: function ($event) {
+                            $event.stopPropagation();
+                          },
+                        },
                       },
                       [
-                        _vm.icon
-                          ? _c("a-icon", { attrs: { type: _vm.icon } })
-                          : _vm._e(),
-                        _vm._v(
-                          "\n        " +
-                            _vm._s(_vm.text || _vm.textMap[_vm.type]) +
-                            "\n      "
-                        ),
+                        _vm._t("default", function () {
+                          return [
+                            _vm._v(_vm._s(_vm.text || _vm.textMap[_vm.type])),
+                          ]
+                        }),
                       ],
-                      1
+                      2
                     ),
-                  ]
+                  ],
+                  2
                 )
               : _c(
-                  "span",
+                  "a-button",
                   {
-                    staticClass: "action-btn",
-                    class: _vm.buttonClass,
+                    attrs: {
+                      type: _vm.buttonType,
+                      size: _vm.size,
+                      icon: _vm.icon,
+                      loading: _vm.loading,
+                      disabled: _vm.disabled,
+                    },
                     on: { click: _vm.handleClick },
                   },
                   [
-                    _vm.icon
-                      ? _c("a-icon", { attrs: { type: _vm.icon } })
-                      : _vm._e(),
-                    _vm._v(
-                      "\n      " +
-                        _vm._s(_vm.text || _vm.textMap[_vm.type]) +
-                        "\n    "
-                    ),
+                    _vm._t("default", function () {
+                      return [_vm._v(_vm._s(_vm.text || _vm.textMap[_vm.type]))]
+                    }),
                   ],
-                  1
+                  2
                 ),
-          ]
-        : _c(
-            "a-button",
-            {
-              class: { "no-permission": !_vm.hasPermission },
-              attrs: {
-                type: _vm.buttonType,
-                size: _vm.size,
-                icon: _vm.icon,
-                loading: _vm.loading,
-                disabled: !_vm.hasPermission || _vm.disabled,
-              },
-              on: { click: _vm.handleClick },
-            },
-            [
-              _vm._t("default", function () {
-                return [_vm._v(_vm._s(_vm.text || _vm.textMap[_vm.type]))]
-              }),
-            ],
-            2
-          ),
+          ],
     ],
     2
   )
@@ -374,7 +499,7 @@ __vue_render__._withStripped = true;
   /* style */
   const __vue_inject_styles__ = undefined;
   /* scoped */
-  const __vue_scope_id__ = "data-v-02f9db28";
+  const __vue_scope_id__ = "data-v-46507212";
   /* module identifier */
   const __vue_module_identifier__ = undefined;
   /* functional template */

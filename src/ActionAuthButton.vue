@@ -2,6 +2,7 @@
   <div>
     <!-- 文本按钮：详情、编辑、删除 -->
     <template v-if="isTextButton">
+      <!-- 删除按钮带确认弹窗 -->
       <a-popconfirm
         v-if="type === 'delete'"
         :title="confirmTitle"
@@ -9,32 +10,79 @@
         @confirm="handleClick"
         placement="topRight"
       >
+        <a-tooltip v-if="!hasPermission" placement="top" :mouseLeaveDelay="0">
+          <template slot="title">
+            <span>暂无权限，请联系管理员</span>
+          </template>
+          <span class="action-btn delete-btn" :class="buttonClass" @click.stop>
+            <a-icon v-if="icon" :type="icon" />
+            {{ text || textMap[type] }}
+          </span>
+        </a-tooltip>
         <span
+          v-else
           class="action-btn delete-btn"
           :class="buttonClass"
-          :disabled="!hasPermission || disabled"
+          :disabled="disabled"
         >
           <a-icon v-if="icon" :type="icon" />
           {{ text || textMap[type] }}
         </span>
       </a-popconfirm>
-      <span v-else class="action-btn" :class="buttonClass" @click="handleClick">
-        <a-icon v-if="icon" :type="icon" />
-        {{ text || textMap[type] }}
-      </span>
+
+      <!-- 其他文本按钮 -->
+      <template v-else>
+        <a-tooltip v-if="!hasPermission" placement="top" :mouseLeaveDelay="0">
+          <template slot="title">
+            <span>暂无权限，请联系管理员</span>
+          </template>
+          <span class="action-btn" :class="buttonClass" @click.stop>
+            <a-icon v-if="icon" :type="icon" />
+            {{ text || textMap[type] }}
+          </span>
+        </a-tooltip>
+        <span
+          v-else
+          class="action-btn"
+          :class="buttonClass"
+          @click="handleClick"
+          :disabled="disabled"
+        >
+          <a-icon v-if="icon" :type="icon" />
+          {{ text || textMap[type] }}
+        </span>
+      </template>
     </template>
-    <a-button
-      v-else
-      :type="buttonType"
-      :size="size"
-      :icon="icon"
-      :loading="loading"
-      :disabled="!hasPermission || disabled"
-      :class="{ 'no-permission': !hasPermission }"
-      @click="handleClick"
-    >
-      <slot>{{ text || textMap[type] }}</slot>
-    </a-button>
+
+    <!-- 按钮类型：新增、自定义 -->
+    <template v-else>
+      <a-tooltip v-if="!hasPermission" placement="top" :mouseLeaveDelay="0">
+        <template slot="title">
+          <span>暂无权限，请联系管理员</span>
+        </template>
+        <a-button
+          :type="buttonType"
+          :size="size"
+          :icon="icon"
+          :disabled="true"
+          :class="{ 'no-permission': !hasPermission }"
+          @click.stop
+        >
+          <slot>{{ text || textMap[type] }}</slot>
+        </a-button>
+      </a-tooltip>
+      <a-button
+        v-else
+        :type="buttonType"
+        :size="size"
+        :icon="icon"
+        :loading="loading"
+        :disabled="disabled"
+        @click="handleClick"
+      >
+        <slot>{{ text || textMap[type] }}</slot>
+      </a-button>
+    </template>
   </div>
 </template>
 
@@ -54,12 +102,13 @@ export default {
     buttonType: {
       type: String,
       default: 'primary',
-      validator: (value) => ['primary', 'default', 'dashed', 'danger', 'link'].includes(value)
+      validator: (value) =>
+        ['primary', 'default', 'dashed', 'danger', 'link'].includes(value),
     },
     size: {
       type: String,
       default: 'default',
-      validator: (value) => ['small', 'default', 'large'].includes(value)
+      validator: (value) => ['small', 'default', 'large'].includes(value),
     },
     icon: { type: String, default: null },
     loading: { type: Boolean, default: false },
@@ -67,7 +116,7 @@ export default {
     record: {
       type: Object,
       default: () => ({}),
-      validator: (value) => value !== null && typeof value === 'object'
+      validator: (value) => value !== null && typeof value === 'object',
     },
     confirmTitle: { type: String, default: '您确认删除这条数据吗？' },
   },

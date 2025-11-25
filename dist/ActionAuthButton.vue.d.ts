@@ -18,12 +18,16 @@ declare namespace _default {
             export { type_3 as type };
             const _default_1: string;
             export { _default_1 as default };
+            export function validator_1(value: any): boolean;
+            export { validator_1 as validator };
         }
         namespace size {
             const type_4: StringConstructor;
             export { type_4 as type };
             const _default_2: string;
             export { _default_2 as default };
+            export function validator_2(value: any): boolean;
+            export { validator_2 as validator };
         }
         namespace icon {
             const type_5: StringConstructor;
@@ -48,6 +52,8 @@ declare namespace _default {
             export { type_8 as type };
             function _default_6(): {};
             export { _default_6 as default };
+            export function validator_3(value: any): boolean;
+            export { validator_3 as validator };
         }
         namespace confirmTitle {
             const type_9: StringConstructor;
