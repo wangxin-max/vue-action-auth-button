@@ -113,10 +113,16 @@
         validator: (value) => value !== null && typeof value === 'object',
       },
       confirmTitle: { type: String, default: '您确认删除这条数据吗？' },
+      buttonStyle: {
+        type: Object,
+        default: () => ({}),
+        validator: (value) => value === null || typeof value === 'object',
+      },
     },
     data() {
       return {
-        hasPermission: false,
+        hasPermission: true, // 默认有权限，避免闪烁
+        checkingPermission: false, // 权限检查状态
         // 预定义配置
         textMap: {
           view: '详情',
@@ -145,6 +151,11 @@
         if (this.type === 'custom') return this.type
         return this.type
       },
+      // 处理按钮样式，确保初始状态一致
+      computedButtonStyle() {
+        // 始终返回一个对象，避免 undefined 导致的样式重计算
+        return this.buttonStyle || {}
+      },
     },
     mounted() {
       this.checkPermission();
@@ -159,15 +170,18 @@
     },
     methods: {
       checkPermission() {
+        this.checkingPermission = true;
         const currentPermissionId = this.$store.state.setting.currentPermissionId;
         if (!currentPermissionId || !this.currentAction) {
           this.hasPermission = false;
+          this.checkingPermission = false;
           return
         }
         this.hasPermission = hasButtonAuthority(
           currentPermissionId,
           this.currentAction
         );
+        this.checkingPermission = false;
       },
       handleClick() {
         if (!this.hasPermission) {
@@ -216,7 +230,7 @@
     }
   }
 
-  var css_248z = ".action-btn[data-v-46507212]{align-items:center;border:1px solid transparent;border-radius:3px;color:#054898!important;cursor:pointer;display:inline-flex;justify-content:center;min-width:auto;transition:all .3s;white-space:nowrap}.action-btn .anticon[data-v-46507212]{margin-right:4px}.action-btn.disabled[data-v-46507212],.action-btn.no-permission[data-v-46507212]{color:#bfbfbf!important;cursor:not-allowed!important;opacity:.6}.action-btn.disabled[data-v-46507212]:hover,.action-btn.no-permission[data-v-46507212]:hover{background-color:transparent!important;color:#bfbfbf!important}.delete-btn[data-v-46507212]{color:#ff4d4f!important}.authority-button.no-permission[data-v-46507212]{cursor:not-allowed!important;filter:grayscale(100%);opacity:.6}";
+  var css_248z = ".action-btn[data-v-5fabe47f]{align-items:center;border:1px solid transparent;border-radius:3px;color:#054898!important;cursor:pointer;display:inline-flex;justify-content:center;transition:all .3s;white-space:nowrap}.action-btn .anticon[data-v-5fabe47f]{margin-right:4px}.action-btn.disabled[data-v-5fabe47f],.action-btn.no-permission[data-v-5fabe47f]{color:#bfbfbf!important;cursor:not-allowed!important;opacity:.6}.action-btn.disabled[data-v-5fabe47f]:hover,.action-btn.no-permission[data-v-5fabe47f]:hover{background-color:transparent!important;color:#bfbfbf!important}.delete-btn[data-v-5fabe47f]{color:#ff4d4f!important}.authority-button.no-permission[data-v-5fabe47f]{cursor:not-allowed!important;filter:grayscale(100%);opacity:.6}";
   styleInject(css_248z);
 
   function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
@@ -447,6 +461,7 @@
                         "a-button",
                         {
                           class: { "no-permission": !_vm.hasPermission },
+                          style: _vm.computedButtonStyle,
                           attrs: {
                             type: _vm.buttonType,
                             size: _vm.size,
@@ -474,6 +489,7 @@
                 : _c(
                     "a-button",
                     {
+                      style: _vm.computedButtonStyle,
                       attrs: {
                         type: _vm.buttonType,
                         size: _vm.size,
@@ -501,7 +517,7 @@
     /* style */
     const __vue_inject_styles__ = undefined;
     /* scoped */
-    const __vue_scope_id__ = "data-v-46507212";
+    const __vue_scope_id__ = "data-v-5fabe47f";
     /* module identifier */
     const __vue_module_identifier__ = undefined;
     /* functional template */

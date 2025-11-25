@@ -81,7 +81,7 @@
           :button-style="{ padding: '0 40px' }"
           @add="handleAdd"
         >
-          自定义样式
+          新增
         </ActionAuthButton>
       </div>
     </div>

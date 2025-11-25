@@ -61,9 +61,18 @@ declare namespace _default {
             const _default_7: string;
             export { _default_7 as default };
         }
+        namespace buttonStyle {
+            const type_10: ObjectConstructor;
+            export { type_10 as type };
+            function _default_8(): {};
+            export { _default_8 as default };
+            export function validator_4(value: any): boolean;
+            export { validator_4 as validator };
+        }
     }
     function data(): {
         hasPermission: boolean;
+        checkingPermission: boolean;
         textMap: {
             view: string;
             edit: string;
@@ -80,6 +89,7 @@ declare namespace _default {
             disabled: any;
         };
         function currentAction(): any;
+        function computedButtonStyle(): any;
     }
     function mounted(): void;
     const watch: {

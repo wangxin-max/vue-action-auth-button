@@ -66,7 +66,7 @@
           :icon="icon"
           :disabled="true"
           :class="{ 'no-permission': !hasPermission }"
-          :style="buttonStyle"
+          :style="computedButtonStyle"
           @click.stop
         >
           <slot>{{ text || textMap[type] }}</slot>
@@ -79,7 +79,7 @@
         :icon="icon"
         :loading="loading"
         :disabled="disabled"
-        :style="buttonStyle"
+        :style="computedButtonStyle"
         @click="handleClick"
       >
         <slot>{{ text || textMap[type] }}</slot>
@@ -121,11 +121,16 @@ export default {
       validator: (value) => value !== null && typeof value === 'object',
     },
     confirmTitle: { type: String, default: '您确认删除这条数据吗？' },
-    buttonStyle: { type: Object, default: {} },
+    buttonStyle: {
+      type: Object,
+      default: () => ({}),
+      validator: (value) => value === null || typeof value === 'object',
+    },
   },
   data() {
     return {
-      hasPermission: false,
+      hasPermission: true, // 默认有权限，避免闪烁
+      checkingPermission: false, // 权限检查状态
       // 预定义配置
       textMap: {
         view: '详情',
@@ -154,6 +159,11 @@ export default {
       if (this.type === 'custom') return this.type
       return this.type
     },
+    // 处理按钮样式，确保初始状态一致
+    computedButtonStyle() {
+      // 始终返回一个对象，避免 undefined 导致的样式重计算
+      return this.buttonStyle || {}
+    },
   },
   mounted() {
     this.checkPermission()
@@ -168,15 +178,18 @@ export default {
   },
   methods: {
     checkPermission() {
+      this.checkingPermission = true
       const currentPermissionId = this.$store.state.setting.currentPermissionId
       if (!currentPermissionId || !this.currentAction) {
         this.hasPermission = false
+        this.checkingPermission = false
         return
       }
       this.hasPermission = hasButtonAuthority(
         currentPermissionId,
         this.currentAction
       )
+      this.checkingPermission = false
     },
     handleClick() {
       if (!this.hasPermission) {
@@ -209,7 +222,6 @@ export default {
   transition: all 0.3s;
   white-space: nowrap;
   border: 1px solid transparent;
-  min-width: auto;
   color: #054898 !important;
   .anticon {
     margin-right: 4px;
@@ -230,6 +242,8 @@ export default {
 .delete-btn {
   color: #ff4d4f !important;
 }
+
+/* 移除固定最小宽度，让按钮自适应内容宽度 */
 
 .authority-button {
   &.no-permission {
