@@ -6,7 +6,7 @@
  */
 function hasButtonAuthority(currentPermissionId, buttonOperation) {
   if (currentPermissionId === '*') {
-    return false
+    return true // 超级管理员拥有所有权限
   }
 
   // 从 localStorage 获取用户信息

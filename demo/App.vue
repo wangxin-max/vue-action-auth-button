@@ -46,43 +46,161 @@
 
       <h3>ActionAuthButton 组件演示</h3>
       <div class="button-group">
-        <!-- 查看按钮 -->
-        <ActionAuthButton type="view" :record="record" @view="handleView" />
+        <!-- 自动模式演示 -->
+        <h4>🎯 自动模式（默认）</h4>
+        <div class="button-row">
+          <ActionAuthButton
+            type="link"
+            buttonType="view"
+            :record="record"
+            @click="handleClick"
+          />
+          <ActionAuthButton
+            type="link"
+            buttonType="edit"
+            :record="record"
+            @click="handleClick"
+          />
+          <ActionAuthButton
+            type="link"
+            buttonType="delete"
+            :record="record"
+            :confirmCallback="customExportConfirm"
+          />
+          <ActionAuthButton buttonType="add" @click="handleClick">
+            新增用户
+          </ActionAuthButton>
+          <ActionAuthButton buttonType="action" @click="handleClick"
+            >操作</ActionAuthButton
+          >
+        </div>
 
-        <!-- 编辑按钮 -->
-        <ActionAuthButton type="edit" :record="record" @edit="handleEdit" />
+        <!-- 二次确认功能演示 -->
+        <h4>🔔 二次确认功能演示</h4>
+        <div class="button-row">
+          <!-- 默认删除确认 -->
+          <ActionAuthButton
+            buttonType="delete"
+            :record="record"
+            @click="handleClick"
+          >
+            删除（默认确认）
+          </ActionAuthButton>
 
-        <!-- 删除按钮 -->
-        <ActionAuthButton
-          type="delete"
-          :record="record"
-          @delete="handleDelete"
-        />
+          <!-- 自定义确认回调 -->
+          <ActionAuthButton
+            :confirmCallback="customExportConfirm"
+            buttonType="delete"
+            :record="record"
+          />
 
-        <!-- 新增按钮 -->
-        <ActionAuthButton type="add" button-type="primary" @add="handleAdd">
-          新增用户
-        </ActionAuthButton>
+          <!-- 复杂确认逻辑 -->
+          <ActionAuthButton
+            buttonType="edit"
+            :confirmCallback="complexEditConfirm"
+            confirmTitle="您确认要编辑这条重要数据吗？"
+            @click="handleClick"
+          >
+            复杂编辑确认
+          </ActionAuthButton>
+        </div>
 
-        <!-- 自定义按钮 -->
-        <ActionAuthButton
-          type="custom"
-          button-type="default"
-          icon="export"
-          @click="handleExport"
-        >
-          导出数据
-        </ActionAuthButton>
+        <!-- 强制文本按钮模式演示 -->
+        <h4>📝 强制文本按钮模式</h4>
+        <div class="button-row">
+          <ActionAuthButton
+            buttonType="view"
+            :record="record"
+            @click="handleClick"
+          />
+          <ActionAuthButton buttonType="add" @click="handleClick">
+            新增
+          </ActionAuthButton>
+          <ActionAuthButton
+            buttonType="custom"
+            icon="export"
+            @click="handleClick"
+          >
+            导出
+          </ActionAuthButton>
+        </div>
 
-        <!-- 自定义样式按钮 -->
-        <ActionAuthButton
-          type="add"
-          button-type="primary"
-          :button-style="{ padding: '0 40px' }"
-          @add="handleAdd"
-        >
-          新增
-        </ActionAuthButton>
+        <!-- 强制 a-button 模式演示 -->
+        <h4>🔘 强制 a-button 模式</h4>
+        <div class="button-row">
+          <ActionAuthButton
+            buttonType="view"
+            :record="record"
+            @click="handleClick"
+          />
+          <ActionAuthButton
+            buttonType="edit"
+            :record="record"
+            @click="handleClick"
+          />
+          <ActionAuthButton
+            buttonType="delete"
+            :record="record"
+            @click="handleClick"
+          />
+        </div>
+
+        <!-- 自定义样式演示 -->
+        <h4>🎨 自定义样式演示</h4>
+        <div class="button-row">
+          <ActionAuthButton
+            buttonType="custom"
+            icon="export"
+            @click="handleClick"
+          >
+            导出数据
+          </ActionAuthButton>
+          <ActionAuthButton
+            buttonType="add"
+            :button-style="{ padding: '0 40px', borderRadius: '20px' }"
+            @click="handleClick"
+          >
+            宽按钮
+          </ActionAuthButton>
+          <ActionAuthButton
+            buttonType="custom"
+            icon="download"
+            @click="handleClick"
+          >
+            下载
+          </ActionAuthButton>
+        </div>
+
+        <!-- Disabled 状态演示 -->
+        <h4>🚫 Disabled 状态演示</h4>
+        <div class="button-row">
+          <ActionAuthButton
+            buttonType="view"
+            type="link"
+            :record="record"
+            disabled
+            @click="handleClick"
+          />
+          <ActionAuthButton
+            buttonType="edit"
+            :record="record"
+            disabled
+            @click="handleClick"
+          />
+          <ActionAuthButton buttonType="add" disabled @click="handleClick">
+            新增
+          </ActionAuthButton>
+          <ActionAuthButton
+            buttonType="custom"
+            icon="export"
+            disabled
+            @click="handleClick"
+          >
+            导出
+          </ActionAuthButton>
+          <ActionAuthButton buttonType="view" disabled @click="handleClick" />
+          <ActionAuthButton buttonType="edit" disabled @click="handleClick" />
+        </div>
       </div>
     </div>
 
@@ -99,8 +217,10 @@
           <p>不同操作类型的按钮有不同的默认样式和图标，保持界面一致性</p>
         </div>
         <div class="feature-card">
-          <h4>❌ 内置确认</h4>
-          <p>删除操作内置确认弹窗，防止误操作，提高用户体验</p>
+          <h4>❌ 灵活确认</h4>
+          <p>
+            支持自定义确认回调函数，可为任何操作添加二次确认，提供丰富的确认逻辑
+          </p>
         </div>
         <div class="feature-card">
           <h4>⚡ 简化代码</h4>
@@ -117,30 +237,6 @@
       </div>
     </div>
 
-    <!-- 代码对比 -->
-    <div class="demo-section">
-      <h2>📝 代码对比</h2>
-      <div class="comparison">
-        <div>
-          <h3>传统方式 (复杂)</h3>
-          <div class="code-block">
-            <pre>{{ traditionalCode }}</pre>
-          </div>
-        </div>
-        <div>
-          <h3>使用 ActionAuthButton (简洁)</h3>
-          <div class="code-block">
-            <pre>{{ componentCode }}</pre>
-          </div>
-        </div>
-      </div>
-      <div style="text-align: center; margin-top: 20px">
-        <a-tag color="green" style="font-size: 16px; padding: 4px 12px">
-          代码减少 70%，功能更强大！🚀
-        </a-tag>
-      </div>
-    </div>
-
     <!-- 操作类型 -->
     <div class="demo-section">
       <h2>🎯 支持的操作类型</h2>
@@ -152,7 +248,7 @@
           >edit - 编辑数据</a-tag
         >
         <a-tag color="red" style="font-size: 14px; padding: 4px 8px"
-          >delete - 删除数据 (内置确认)</a-tag
+          >delete - 删除数据 (默认确认)</a-tag
         >
         <a-tag color="purple" style="font-size: 14px; padding: 4px 8px"
           >add - 新增数据</a-tag
@@ -169,10 +265,15 @@
       <div class="code-block">
         <pre>{{ usageExample }}</pre>
       </div>
+
+      <h3>🔧 自定义确认回调方法</h3>
+      <div class="code-block">
+        <pre>{{ jsExample }}</pre>
+      </div>
     </div>
 
     <!-- 测试数据表格 -->
-    <div class="demo-section">
+    <!-- <div class="demo-section">
       <h2>📊 模拟数据表格</h2>
       <a-table
         :columns="columns"
@@ -181,16 +282,16 @@
         size="middle"
       >
         <template slot="action" slot-scope="text, record">
-          <ActionAuthButton type="view" :record="record" @view="handleView" />
-          <ActionAuthButton type="edit" :record="record" @edit="handleEdit" />
+          <ActionAuthButton buttonType="view" :record="record" @click="handleClick" />
+          <ActionAuthButton buttonType="edit" :record="record" @click="handleClick" />
           <ActionAuthButton
-            type="delete"
+            buttonType="delete"
             :record="record"
-            @delete="handleDelete"
+            @click="handleClick"
           />
         </template>
       </a-table>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -211,6 +312,105 @@ export default {
         description: '这是一条测试记录，用于演示权限按钮功能',
         createTime: '2024-01-01 10:00:00',
       },
+      usageExample: `<!-- 基本使用 -->
+<ActionAuthButton buttonType="view" :record="record" @click="handleView" />
+
+<!-- 自定义文本 -->
+<ActionAuthButton buttonType="add" @click="handleAdd">
+  新增用户
+</ActionAuthButton>
+
+<!-- 强制文本模式 -->
+<ActionAuthButton
+  buttonType="edit"
+  :record="record"
+  @click="handleEdit"
+/>
+
+<!-- 自定义样式 -->
+<ActionAuthButton
+  buttonType="custom"
+  icon="export"
+  :button-style="{ padding: '0 40px' }"
+  @click="handleExport"
+>
+  导出数据
+</ActionAuthButton>
+
+<!-- 默认删除确认 -->
+<ActionAuthButton
+  buttonType="delete"
+  :record="record"
+  @click="handleDelete"
+/>
+
+<!-- 自定义确认回调 -->
+<ActionAuthButton
+  buttonType="custom"
+  :confirmCallback="customConfirm"
+  confirmTitle="您确认要导出这些数据吗？"
+  @click="handleExport"
+>
+  导出数据
+</ActionAuthButton>
+
+<!-- 复杂确认逻辑 -->
+<ActionAuthButton
+  buttonType="edit"
+  :confirmCallback="complexConfirm"
+  confirmTitle="您确认要编辑这条重要数据吗？"
+  :record="record"
+  @click="handleEdit"
+/>
+
+<!-- 禁用状态 -->
+<ActionAuthButton
+  buttonType="delete"
+  :record="record"
+  disabled
+  @click="handleDelete"
+/>`,
+      jsExample: `// 自定义确认回调方法示例
+methods: {
+  // 异步确认回调（推荐）
+  asyncCustomConfirm({ type, record }) {
+    // 在用户点击确认时执行的业务逻辑
+    console.log('执行确认回调:', { type, record })
+
+    // 异步操作示例
+    return new Promise((resolve, reject) => {
+      // 业务逻辑检查
+      if (!record || !record.id) {
+        this.$message.error('无效数据！')
+        reject(new Error('无效数据'))
+        return
+      }
+
+      // 异步业务操作
+      setTimeout(() => {
+        console.log('操作完成')
+        this.$message.success('操作成功！')
+        resolve() // 成功时自动关闭弹窗
+      }, 2000)
+    })
+  },
+
+  // 同步确认回调
+  syncCustomConfirm({ type, record }) {
+    // 同步业务逻辑
+    console.log('执行确认回调:', { type, record })
+
+    // 简单检查
+    if (!record || !record.id) {
+      this.$message.error('无效数据！')
+      return false // 返回 false 阻止关闭弹窗
+    }
+
+    // 执行业务逻辑
+    this.$message.success('操作成功！')
+    return true // 返回 true 允许关闭弹窗
+  }
+}`,
       columns: [
         {
           title: 'ID',
@@ -260,54 +460,6 @@ export default {
           createTime: '2024-01-03 12:00:00',
         },
       ],
-      traditionalCode: `<span v-show="hasButtonAuthority(currentPermissionId, 'view')"
-      @click="handleView(record)">
-  <a-icon type="eye" /> 详情
-</span>
-<span v-show="hasButtonAuthority(currentPermissionId, 'edit')"
-      @click="handleEdit(record)">
-  <a-icon type="edit" /> 编辑
-</span>
-<a-popconfirm v-show="hasButtonAuthority(currentPermissionId, 'delete')"
-               title="确认删除?"
-               @confirm="handleDelete(record)">
-  <span><a-icon type="delete" /> 删除</span>
-</a-popconfirm>`,
-      componentCode: `<ActionAuthButton type="view" :record="record"
-                    @view="handleView" />
-<ActionAuthButton type="edit" :record="record"
-                    @edit="handleEdit" />
-<ActionAuthButton type="delete" :record="record"
-                    @delete="handleDelete" />`,
-      usageExample: `&lt;template&gt;
-  &lt;!-- 详情按钮 --&gt;
-  &lt;ActionAuthButton type="view" :record="record" @view="handleView" /&gt;
-
-  &lt;!-- 编辑按钮 --&gt;
-  &lt;ActionAuthButton type="edit" :record="record" @edit="handleEdit" /&gt;
-
-  &lt;!-- 删除按钮（内置确认弹窗） --&gt;
-  &lt;ActionAuthButton type="delete" :record="record" @delete="handleDelete" /&gt;
-
-  &lt;!-- 新增按钮 --&gt;
-  &lt;ActionAuthButton type="add" button-type="primary" @add="handleAdd"&gt;
-    新增
-  &lt;/ActionAuthButton&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-import ActionAuthButton from '@/components/ActionAuthButton/ActionAuthButton.vue'
-
-export default {
-  components: { ActionAuthButton },
-  methods: {
-    handleView(record) { console.log('查看:', record) },
-    handleEdit(record) { console.log('编辑:', record) },
-    handleDelete(record) { console.log('删除:', record) },
-    handleAdd() { console.log('新增') }
-  }
-}
-&lt;/script&gt;`,
     }
   },
   created() {
@@ -348,7 +500,7 @@ export default {
             : [
                 {
                   id: permission,
-                  operation: ['view', 'edit', 'add', 'delete'],
+                  operation: ['view', 'edit', 'add', 'delete', 'action'],
                 },
               ],
       }
@@ -357,6 +509,34 @@ export default {
       this.$message.success(
         `权限已切换到: ${permission === '*' ? '超级管理员' : permission}`
       )
+    },
+
+    // 统一的事件处理方法
+    handleClick(eventData) {
+      console.log('按钮点击事件:', eventData)
+
+      switch (eventData.type) {
+        case 'view':
+          this.handleView(eventData.record)
+          break
+        case 'edit':
+          this.handleEdit(eventData.record)
+          break
+        case 'add':
+          this.handleAdd()
+          break
+        case 'delete':
+          this.handleDelete(eventData.record)
+          break
+        case 'custom':
+          this.handleCustom(eventData.record)
+          break
+        case 'action':
+          this.handleAction(eventData.record)
+          break
+        default:
+          this.$message.info(`未知操作类型: ${eventData.type}`)
+      }
     },
 
     handleView(record) {
@@ -381,13 +561,147 @@ export default {
       this.$message.info('新增操作')
     },
 
-    handleExport() {
-      this.$message.info('导出操作')
+    handleCustom(record) {
+      this.$message.info(
+        '自定义操作: ' + JSON.stringify(record || this.record, null, 2)
+      )
+    },
+
+    handleAction(record) {
+      this.$message.info(
+        '通用操作: ' + JSON.stringify(record || this.record, null, 2)
+      )
+    },
+
+    // 自定义导出确认回调
+    customExportConfirm({ type, record }) {
+      console.log('自定义导出确认:', { type, record })
+
+      // 在用户点击确认时执行的业务逻辑
+      this.$message.success(`正在导出 ${record.name || '数据'}...`)
+
+      // 模拟异步导出操作
+      return new Promise((resolve, reject) => {
+        // 检查数据状态
+        const hasData = record && record.id
+        if (!hasData) {
+          this.$message.error('没有数据可以导出！')
+          reject(new Error('无数据'))
+          return
+        }
+
+        // 模拟异步操作
+        setTimeout(() => {
+          console.log('导出操作完成')
+          this.$message.success('导出完成！')
+          resolve() // 成功时 resolve，弹窗会自动关闭
+        }, 2000)
+      })
+    },
+
+    // 复杂编辑确认回调
+    complexEditConfirm({ type, record }) {
+      console.log('复杂编辑确认:', { type, record })
+
+      // 在用户点击确认时执行的业务逻辑
+      return new Promise((resolve, reject) => {
+        // 检查数据是否可以被编辑
+        const isEditable = record && record.id && !record.locked
+
+        if (!isEditable) {
+          this.$message.error('此数据已锁定，无法编辑！')
+          reject(new Error('数据锁定'))
+          return
+        }
+
+        // 如果数据是重要数据，需要额外确认
+        if (record && record.name && record.name.includes('重要')) {
+          this.$confirm({
+            title: '重要数据编辑警告',
+            content:
+              '您即将编辑重要数据，此操作可能会影响系统正常运行。请确认您已了解相关风险。',
+            okText: '我知道风险，继续编辑',
+            cancelText: '取消',
+            okButtonProps: {
+              danger: true,
+            },
+            onOk: () => {
+              console.log('重要数据编辑确认通过')
+              this.$message.success('编辑权限已获取，正在打开编辑页面...')
+              setTimeout(() => {
+                resolve() // 确认后 resolve
+              }, 1000)
+            },
+            onCancel: () => {
+              reject(new Error('用户取消'))
+            },
+          })
+        } else {
+          // 普通数据直接确认
+          console.log('普通数据编辑确认通过')
+          this.$message.success('正在打开编辑页面...')
+          setTimeout(() => {
+            resolve()
+          }, 500)
+        }
+      })
     },
   },
 }
 </script>
 
 <style scoped>
-/* 这里可以添加组件特定的样式 */
+.button-group {
+  margin: 20px 0;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fafafa;
+  border-radius: 6px;
+  border: 1px solid #e8e8e8;
+}
+
+.button-row h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.button-row:first-child h4 {
+  margin-bottom: 0;
+}
+
+.button-row:first-child {
+  display: block;
+}
+
+.button-row .button-row {
+  margin-top: 15px;
+  background-color: #fff;
+}
+
+.button-row .button-row h4 {
+  font-size: 14px;
+  color: #666;
+}
+
+/* 按钮组样式优化 */
+.button-row:not(:first-child) {
+  padding-left: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .button-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
 </style>

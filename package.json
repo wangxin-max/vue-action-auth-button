@@ -1,6 +1,6 @@
 {
   "name": "vue-action-auth-button",
-  "version": "1.0.5",
+  "version": "1.0.16",
   "description": "一个简洁强大的 Vue 权限按钮组件，支持详情、编辑、新增、删除等操作的权限控制和二次确认",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
